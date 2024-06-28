@@ -61,5 +61,6 @@ if packagescur != packagesnew:
     with open(file, "w", encoding="utf-8") as f:
         json.dump(packagesnew, f, ensure_ascii=False, indent=2)
     f.close()
+    input("Press ENTER to exit.")
 else:
     print("No new packages found.")
