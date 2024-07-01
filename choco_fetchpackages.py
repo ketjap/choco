@@ -21,31 +21,42 @@ else:
         with open(file, "r") as f:
             packagescur = json.load(f)
         f.close()
-    except:
+    except FileNotFoundError:
         print(f"Error loading file {file}. Specify packages to create the file")
-        sys.exit(2)     
+        sys.exit(2)
+    except:
+        print(f"Unknown error occured:")
+        print(sys.exc_info())
+        sys.exit(2)
 
 packagesnew = []
 for package in packagescur:
     link = "https://community.chocolatey.org/packages/" + package['name']
+    try:
+        with urllib.request.urlopen(link) as response:
+            body = str(response.read())
+            
+            searchstr = '<td class="version"   title="Latest Version"  >'
+            index = body.find(searchstr)
 
-    with urllib.request.urlopen(link) as response:
-        body = str(response.read())
+            buttonbegin = '<button '
+            indexbegin = body.rfind(buttonbegin,0,index)
+            buttonend = '>'
+            indexend = body.find(buttonend,indexbegin) + 1
+            buttonstr = body[indexbegin:indexend]
 
-    searchstr = '<td class="version"   title="Latest Version"  >'
-    index = body.find(searchstr)
-
-    buttonbegin = '<button '
-    indexbegin = body.rfind(buttonbegin,0,index)
-    buttonend = '>'
-    indexend = body.find(buttonend,indexbegin) + 1
-    buttonstr = body[indexbegin:indexend]
-
-    versionbegin = 'version="'
-    indexbegin = buttonstr.find(versionbegin) + len(versionbegin)
-    versionend = '"'
-    indexend = buttonstr.find(versionend,indexbegin)
-    version=buttonstr[indexbegin:indexend]
+            versionbegin = 'version="'
+            indexbegin = buttonstr.find(versionbegin) + len(versionbegin)
+            versionend = '"'
+            indexend = buttonstr.find(versionend,indexbegin)
+            version=buttonstr[indexbegin:indexend]
+    except urllib.error.HTTPError:
+        print(f"{package['name']} not found.")
+        version = package['version']
+    except:
+        print(f"Unknown error occured fetching link { link }:")
+        print(sys.exc_info())
+        version = package['version']
 
     line = {
         "name": package['name'],
