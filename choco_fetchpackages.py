@@ -58,7 +58,7 @@ for package in packagescur["packages"]:
             indexend = buttonstr.find(versionend,indexbegin)
             version=buttonstr[indexbegin:indexend]
     except urllib.error.HTTPError:
-        print(f"{package["name"]} not found.")
+        print(f"{package['name']} not found.")
         version = package["version"]
     except:
         print(f"Unknown error occured fetching link { link }:")
