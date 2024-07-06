@@ -1,4 +1,4 @@
-$File = Get-Item -Path "packages*.json"
+$File = Get-Item -Path "packages-*.json"
 switch (($File | Measure-Object).Count){
     0 {
         Write-Output -InputObject "No pacakges-<nnn>.json file found."

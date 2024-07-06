@@ -24,9 +24,9 @@ if args.package and args.file==None:
     sys.exit(2)
 
 if args.file:
-    files=["packages_" + args.file + ".json"]
+    files=["packages-" + args.file + ".json"]
 else:
-    files=glob.glob("packages*.json")
+    files=glob.glob("packages-*.json")
     if files == []:
         print("No package files found. Please create one with --file and --package")
 
