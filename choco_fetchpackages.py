@@ -4,21 +4,27 @@ import ssl
 import json
 import sys
 import datetime
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-f", "--force", help="force check, even within 24h", action="store_true")
+parser.add_argument("-p", "--packages", help="create a new file with mentioned packages", nargs='+')
+args = parser.parse_args()
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
 file="packages.json"
 curtime=datetime.datetime.now()
 
-if len(sys.argv) > 1:
+if args.packages:
     checktime=curtime + datetime.timedelta(days=-1)
     packagescur = {
         "checktime": str(checktime),
         "packages": []
     }
-    for i in range(1,len(sys.argv)):
+    for name in args.packages:
         package = {
-            "name": sys.argv[i],
+            "name": name,
             "version": 0
         }
         packagescur["packages"].append(package)
@@ -36,7 +42,7 @@ else:
         sys.exit(2)
 
 checktime=datetime.datetime.fromisoformat(packagescur["checktime"])
-if (curtime-checktime).days > 0:
+if args.force or (curtime-checktime).days > 0:
     packagesnew = {
         "checktime": str(datetime.datetime.now()),
         "packages": []
