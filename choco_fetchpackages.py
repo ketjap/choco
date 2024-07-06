@@ -3,6 +3,7 @@ import urllib.request
 import ssl
 import json
 import sys
+import datetime
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
@@ -29,8 +30,11 @@ else:
         print(sys.exc_info())
         sys.exit(2)
 
-packagesnew = []
-for package in packagescur:
+packagesnew = {
+    "checktime": str(datetime.datetime.now()),
+    "packages": []
+}
+for package in packagescur['packages']:
     link = "https://community.chocolatey.org/packages/" + package['name']
     try:
         with urllib.request.urlopen(link) as response:
@@ -62,13 +66,13 @@ for package in packagescur:
         "name": package['name'],
         "version": version
     }
-    packagesnew.append(line)
+    packagesnew['packages'].append(line)
 
-if packagescur != packagesnew:
+if packagescur['packages'] != packagesnew['packages']:
     print("New package versions found:")
-    for i in range(len(packagesnew)):
-        if packagesnew[i] != packagescur[i]:
-            print(packagesnew[i])
+    for i in range(len(packagesnew["packages"])):
+        if packagesnew["packages"][i] != packagescur["packages"][i]:
+            print(packagesnew["packages"][i])
     with open(file, "w", encoding="utf-8") as f:
         json.dump(packagesnew, f, ensure_ascii=False, indent=2)
     f.close()
