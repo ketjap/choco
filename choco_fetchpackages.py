@@ -11,8 +11,7 @@ file="packages.json"
 curtime=datetime.datetime.now()
 
 if len(sys.argv) > 1:
-    checktime=curtime
-    checktime+=datetime.timedelta(days=-1)
+    checktime=curtime + datetime.timedelta(days=-1)
     packagescur = {
         "checktime": str(checktime),
         "packages": []
