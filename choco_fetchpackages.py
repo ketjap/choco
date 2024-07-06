@@ -7,7 +7,10 @@ import datetime
 import argparse
 import glob
 
-parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser(
+    prog="choco_fetchpages.py",
+    description="First create a packages-<nnn>.json file by using the --file and --package parameter. Multiiple files can be created. When running the next time it will fetch the latest version from Chocolaty and update the json files. This can be used as source on different systems to update to the specified version."
+)
 group = parser.add_argument_group()
 parser.add_argument("--force", help="force check, even within 24h", action="store_true")
 parser.add_argument("-q", "--quiet", help="quied mode, no input asked.", action="store_true")
