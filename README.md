@@ -2,7 +2,7 @@
 Scripts that could be useful using Chocolatey.
 
 ## choco_fetchpackages.py
-Create a json file with packages and version you want to update. Arguments will be handled as packages and will overwrite the packages.json file.
+Create a json file with packages and latest version you want to update. Multiple json files can be created to use for different systems. Only a single json file can exisit on a system to be used with choco_upgrade.ps1.
 
 usage: choco_fetchpackages.py [-h] [--force] [-q] [-f FILE] [-p PACKAGE [PACKAGE ...]]
 
@@ -15,4 +15,4 @@ optional arguments:
 -p PACKAGE [PACKAGE ...], --package PACKAGE [PACKAGE ...]  packages to check
 
 ## choco_upgrade.ps1
-Upgrade packages from packages.json with specified version using choco.
+Upgrade packages from packages-<nnn>.json with specified version using choco. Only a single json file can exisit in the same folder as the choco_upgrade.ps1 file.
