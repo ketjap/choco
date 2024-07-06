@@ -10,13 +10,16 @@ ssl._create_default_https_context = ssl._create_unverified_context
 file="packages.json"
 
 if len(sys.argv) > 1:
-    packagescur = []
+    packagescur = {
+        "checktime": str(datetime.datetime.now()),
+        "packages": []
+    }
     for i in range(1,len(sys.argv)):
         package = {
             "name": sys.argv[i],
             "version": 0
         }
-        packagescur.append(package)
+        packagescur["packages"].append(package)
 else:
     try:
         with open(file, "r") as f:
@@ -34,8 +37,8 @@ packagesnew = {
     "checktime": str(datetime.datetime.now()),
     "packages": []
 }
-for package in packagescur['packages']:
-    link = "https://community.chocolatey.org/packages/" + package['name']
+for package in packagescur["packages"]:
+    link = "https://community.chocolatey.org/packages/" + package["name"]
     try:
         with urllib.request.urlopen(link) as response:
             body = str(response.read())
@@ -55,20 +58,20 @@ for package in packagescur['packages']:
             indexend = buttonstr.find(versionend,indexbegin)
             version=buttonstr[indexbegin:indexend]
     except urllib.error.HTTPError:
-        print(f"{package['name']} not found.")
-        version = package['version']
+        print(f"{package["name"]} not found.")
+        version = package["version"]
     except:
         print(f"Unknown error occured fetching link { link }:")
         print(sys.exc_info())
-        version = package['version']
+        version = package["version"]
 
     line = {
-        "name": package['name'],
+        "name": package["name"],
         "version": version
     }
-    packagesnew['packages'].append(line)
+    packagesnew["packages"].append(line)
 
-if packagescur['packages'] != packagesnew['packages']:
+if packagescur["packages"] != packagesnew["packages"]:
     print("New package versions found:")
     for i in range(len(packagesnew["packages"])):
         if packagesnew["packages"][i] != packagescur["packages"][i]:
