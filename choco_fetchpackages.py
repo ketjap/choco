@@ -6,6 +6,7 @@ import sys
 import datetime
 import argparse
 import glob
+import os
 
 parser = argparse.ArgumentParser(
     prog="choco_fetchpages.py",
@@ -118,4 +119,5 @@ for file in files:
         print(f"Last check for { file } was within 24 hours ago. No need to check again.")
 
 if args.quiet==False and newpackagesfound==True:
-    input("Press ENTER to exit.")
+    input("Press ENTER to open explorer.")
+    os.startfile(os.getcwd())
